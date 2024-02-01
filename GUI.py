@@ -1,15 +1,6 @@
 import tkinter as tk
 import mysql.connector
 
-mydb = mysql.connector.connect(
-    host="127.0.0.1:3306", # or the hostname of your database server
-    user="root", # your database username
-    password="Pinguspikey1!", # your database password
-    database="PasswordManager" # the name of the database you want to connect to
-    )
-
-mycursor = mydb.cursor()
-
 def show_frame1():
     frame2.pack_forget()
     frame3.pack_forget()
@@ -24,6 +15,42 @@ def show_frame3():
     frame1.pack_forget()
     frame2.pack_forget()
     frame3.pack()
+
+def login_action():
+    username_input = user_entry.get()
+    password_input = password_entry.get()
+
+    user_account = login_user(username_input, password_input)
+
+    if user_account:
+        show_frame2()
+    else:
+        print("login failed")
+
+def login_user(username, password):
+    try:
+        mydb = mysql.connector.connect(
+            host="127.0.0.1", # or the hostname of your database server
+            user="root", # your database username
+            password="Pinguspikey1!", # your database password
+            database="password manager", # the name of the database you want to connect to
+            port=3306
+            )
+
+        mycursor = mydb.cursor()
+
+        sql = "SELECT * FROM `password manager`.users WHERE UserName = %s AND Password = %s"
+        mycursor.execute(sql, (username, password))
+        account = mycursor.fetchone()
+
+        mycursor.close()
+        mydb.close()
+
+        return account
+
+    except mysql.connector.Error as error:
+        print(f"Failed to query DB: {error}")
+        return None
 
 #window
 window = tk.Tk() #window block
@@ -40,8 +67,8 @@ label = tk.Label(frame1, text="Login", bg="black", fg="#FF0077", font=("Arial", 
 username = tk.Label(frame1, text="Username", bg="black", fg="white", font=("Arial", 16))
 user_entry = tk.Entry(frame1, font=("Arial", 16))
 password = tk.Label(frame1, text="Password", bg="black", fg="white", font=("Arial", 16))
-password_entry = tk.Entry(frame1, show="*", font=("Arial", 16))
-login_button = tk.Button(frame1, text="Login", bg="#FF0077", fg="white", font=("Arial", 16), command=show_frame2)
+password_entry = tk.Entry(frame1, font=("Arial", 16))
+login_button = tk.Button(frame1, text="Login", bg="#FF0077", fg="white", font=("Arial", 16), command=login_action)
 new_user_button = tk.Button(frame1, text="New User", bg="#FF0077", fg="white", font=("Arial", 16), command=show_frame3)
 
 #creaing widgets frame2 (Login)
