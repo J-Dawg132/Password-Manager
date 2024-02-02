@@ -30,11 +30,10 @@ def login_action():
 def login_user(username, password):
     try:
         mydb = mysql.connector.connect(
-            host="127.0.0.1", # or the hostname of your database server
+            host="localhost", # or the hostname of your database server
             user="root", # your database username
             password="Pinguspikey1!", # your database password
             database="password manager", # the name of the database you want to connect to
-            port=3306
             )
 
         mycursor = mydb.cursor()
@@ -71,11 +70,10 @@ def register_action():
 def register_user(firstName, lastName, birthdate, username, password, email):
     try:
         mydb = mysql.connector.connect(
-            host="127.0.0.1", # or the hostname of your database server
+            host="localhost", # or the hostname of your database server
             user="root", # your database username
             password="Pinguspikey1!", # your database password
             database="password manager", # the name of the database you want to connect to
-            port=3306
             )
 
         mycursor = mydb.cursor()
