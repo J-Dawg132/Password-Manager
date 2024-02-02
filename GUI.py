@@ -24,6 +24,8 @@ def login_action():
 
     if user_account:
         show_frame2()
+        user_entry.delete(0, tk.END)
+        password_entry.delete(0, tk.END)
     else:
         print("login failed")
 
@@ -59,13 +61,10 @@ def register_action():
     password = password_entry_2.get()
     email = email_address_entry.get()
 
-    # user_account = register_user(firstName, lastName, birthdate, username, password, email)
-
     if register_user(firstName, lastName, birthdate, username, password, email):
         show_frame1()
     else:
         print("register failed")
-        # print(user_account)
 
 def register_user(firstName, lastName, birthdate, username, password, email):
     try:
