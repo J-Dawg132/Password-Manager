@@ -39,7 +39,7 @@ def login_user(username, password):
 
         mycursor = mydb.cursor()
 
-        sql = "SELECT * FROM `password manager`.users WHERE UserName = %s AND Password = %s"
+        sql = "SELECT * FROM users WHERE UserName = %s AND Password = %s"
         mycursor.execute(sql, (username, password))
         account = mycursor.fetchone()
 
@@ -47,6 +47,48 @@ def login_user(username, password):
         mydb.close()
 
         return account
+
+    except mysql.connector.Error as error:
+        print(f"Failed to query DB: {error}")
+        return None
+
+def register_action():
+    firstName = first_name_entry.get()
+    lastName = last_name_entry.get()
+    birthdate = birthdate_entry.get()
+    username = user_entry_2.get()
+    password = password_entry_2.get()
+    email = email_address_entry.get()
+
+    # user_account = register_user(firstName, lastName, birthdate, username, password, email)
+
+    if register_user(firstName, lastName, birthdate, username, password, email):
+        show_frame1()
+    else:
+        print("register failed")
+        # print(user_account)
+
+def register_user(firstName, lastName, birthdate, username, password, email):
+    try:
+        mydb = mysql.connector.connect(
+            host="127.0.0.1", # or the hostname of your database server
+            user="root", # your database username
+            password="Pinguspikey1!", # your database password
+            database="password manager", # the name of the database you want to connect to
+            port=3306
+            )
+
+        mycursor = mydb.cursor()
+
+        sql = "INSERT INTO users (FirstName, LastName, Birthday, UserName, Password, EmailAddress) VALUES (%s, %s, %s, %s, %s, %s)"
+        mycursor.execute(sql, (firstName, lastName, birthdate, username, password, email))
+        mydb.commit()
+
+        success = mycursor.rowcount == 1
+
+        mycursor.close()
+        mydb.close()
+        return success
 
     except mysql.connector.Error as error:
         print(f"Failed to query DB: {error}")
@@ -67,7 +109,7 @@ label = tk.Label(frame1, text="Login", bg="black", fg="#FF0077", font=("Arial", 
 username = tk.Label(frame1, text="Username", bg="black", fg="white", font=("Arial", 16))
 user_entry = tk.Entry(frame1, font=("Arial", 16))
 password = tk.Label(frame1, text="Password", bg="black", fg="white", font=("Arial", 16))
-password_entry = tk.Entry(frame1, font=("Arial", 16))
+password_entry = tk.Entry(frame1,show="*", font=("Arial", 16))
 login_button = tk.Button(frame1, text="Login", bg="#FF0077", fg="white", font=("Arial", 16), command=login_action)
 new_user_button = tk.Button(frame1, text="New User", bg="#FF0077", fg="white", font=("Arial", 16), command=show_frame3)
 
@@ -89,6 +131,7 @@ email_address = tk.Label(frame3, text="Email Address", bg="black", fg="white", f
 email_address_entry = tk.Entry(frame3, font=("Arial", 16))
 birthdate = tk.Label(frame3, text="Birthday", bg="black", fg="white", font=("Arial", 16))
 birthdate_entry = tk.Entry(frame3, font=("Arial", 16))
+register_button = tk.Button(frame3, text="Register", bg="#FF0077", fg="white", font=("Arial", 16), command=register_action)
 back_button2 = tk.Button(frame3, text="Back", bg="#FF0077", fg="white", font=("Arial", 16), command=show_frame1)
 
 #placing widgets frame1
@@ -118,7 +161,8 @@ email_address.grid(row=3, column=0)
 email_address_entry.grid(row=3, column=1)
 birthdate.grid(row=3, column=2)
 birthdate_entry.grid(row=3, column=3)
-back_button2.grid(row=4, column=0, columnspan=4, pady=15)
+register_button.grid(row=4, column=0, columnspan=4, pady=10)
+back_button2.grid(row=5, column=0, columnspan=4, pady=10)
 
 frame1.pack()
 window.update()
