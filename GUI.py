@@ -16,7 +16,7 @@ def show_frame3():
     frame2.pack_forget()
     frame3.pack()
 
-def login_action():
+def login_action(event = None):
     username_input = user_entry.get()
     password_input = password_entry.get()
 
@@ -63,6 +63,8 @@ def register_action():
 
     if register_user(firstName, lastName, birthdate, username, password, email):
         show_frame1()
+        user_entry.insert(0, username) 
+        password_entry.insert(0, password)
     else:
         print("register failed")
 
@@ -112,7 +114,7 @@ new_user_button = tk.Button(frame1, text="New User", bg="#FF0077", fg="white", f
 
 #creaing widgets frame2 (Login)
 logged_in = tk.Label(frame2, text="Logged In", bg="black", fg="#FF0077", font=("Arial", 30))
-back_button1 = tk.Button(frame2, text="Back", bg="#FF0077", fg="white", font=("Arial", 16), command=show_frame1)
+LogOut = tk.Button(frame2, text="Log Out", bg="#FF0077", fg="white", font=("Arial", 16), command=show_frame1)
 
 #creaing widgets frame3 (Register)
 register = tk.Label(frame3, text="Register", bg="black", fg="#FF0077", font=("Arial", 30))
@@ -142,7 +144,7 @@ new_user_button.grid(row=4, column=0, columnspan=2)
 
 #placing widgets frame2 (Logged in)
 logged_in.grid(row=0, column=0, columnspan=2, sticky="news", pady=40)
-back_button1.grid(row=4, column=0, columnspan=2)
+LogOut.grid(row=4, column=0, columnspan=2)
 
 #placing widgets frame3 (Register)
 register.grid(row=0, column=0, columnspan=4, sticky="news", pady=40)
@@ -162,5 +164,6 @@ register_button.grid(row=4, column=0, columnspan=4, pady=10)
 back_button2.grid(row=5, column=0, columnspan=4, pady=10)
 
 frame1.pack()
+window.bind('<Return>', login_action)
 window.update()
 window.mainloop() #this runs it continuosly(loop), making it viewable.
